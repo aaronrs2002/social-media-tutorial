@@ -1,0 +1,34 @@
+{
+  "name": "social-media-app",
+  "version": "1.0.0",
+  "description": "standard social media web-app using MySQL, Node,js, React.js and Bootstrap",
+  "main": "server.js",
+  "engines": {
+    "node": "16.18.0",
+    "npm": "8.19.2"
+  },
+  "scripts": {
+    "client-install": "npm install --prefix client",
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+  },
+  "keywords": [
+    "social-media",
+    "react.js",
+    "web-app"
+  ],
+  "author": "Aaron Smith",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.3.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.18.1",
+    "path": "^0.12.7"
+  }
+}

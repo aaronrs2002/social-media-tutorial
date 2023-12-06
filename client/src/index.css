@@ -1,0 +1,224 @@
+@import url("https://fonts.googleapis.com/css2?family=BenchNine&family=Oswald&family=Passion+One&display=swap");
+
+body {
+  font-family: "Oswald", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: "Passion One", cursive;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.error {
+  border: #ff0000 1px solid;
+}
+
+/*start loader animation*/
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #333;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+.btn[title="Remove this feed"] {
+  padding: 2px 6px;
+  margin-right: 5px;
+}
+
+ul.inline {
+  padding-left: 0px;
+}
+
+ul.inline li {
+  list-style-type: none;
+  display: inline-block;
+}
+
+#confirmIframe {
+  height: 1px;
+  width: 1px;
+}
+
+.avatarThumb {
+  margin: -15px 10px -13px 0px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+
+.card-body img,
+video {
+  max-width: 100%;
+}
+
+img.logo {
+  position: absolute;
+  z-index: 2;
+  height: auto;
+  width: 120px;
+
+  margin-top: 0px;
+}
+
+.loginForm {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+  margin-top: 10%;
+  text-align: center;
+}
+
+.hide,
+.active.hide+.card,
+.hide.list-group-item {
+  display: none !important;
+}
+
+.btn-group.form-control {
+  padding: 0px;
+}
+
+/* START MESSAGES CSS*/
+#message {
+  margin-bottom: 80px;
+  min-height: 100px;
+  width: 100%;
+}
+
+.avatarIcon {
+  width: 50px;
+  height: auto;
+  border-radius: 50%;
+}
+
+#stage .fa-check-circle {
+  margin-top: 40%;
+}
+
+#activeContacts {
+  padding-right: 0px;
+}
+
+/* END MESSAGES CSS*/
+
+.dropdown-menu {
+  display: block;
+}
+
+.activeAddress {
+  font-size: 1rem;
+}
+
+.fa-trash.btn-danger {
+  color: #fff;
+}
+
+ul.noStyle {
+  padding-left: 0px;
+  list-style-type: none;
+}
+
+footer {
+  box-shadow: 0 -4px 3px rgba(0, 0, 0, 0.075);
+  /* position: fixed;*/
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  /* z-index: 3;*/
+}
+
+#messageAlert {
+  margin-top: 10%;
+  position: fixed;
+  z-index: 150;
+  width: 100%;
+}
+
+/*After login template*/
+
+.jumbotron {
+  max-height: 140px;
+  width: 100%;
+  border-bottom: #fff 2px solid;
+  padding: 35px 0px 0px 0px;
+}
+
+#avatar {
+  border: #fff 2px solid;
+  border-radius: 50%;
+  height: 150px;
+  width: 150px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+ul.list-group li,
+.pointer {
+  cursor: pointer;
+}
+
+.fa-heart:hover {
+  color: #ff0000;
+}
+
+iframe[src*="youtu.be"],
+iframe[src*="youtube"] {
+  min-height: 250px;
+  width: 100%;
+}
+
+.mobile {
+  display: none;
+}
+
+.desktop {
+  display: block;
+}
+
+@media (max-width: 992px) {
+  .mobile {
+    display: block;
+  }
+
+  .desktop {
+    display: none;
+  }
+
+  a[href='#settingsPanel'] {
+    width: 100%;
+  }
+}
+
+/*end 992*/
+
+@media (max-width: 767px) {
+  div[role="alert"] {
+    margin-top: 20%;
+  }
+}
+
+/*end 767*/
