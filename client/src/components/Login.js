@@ -1,82 +1,10 @@
-import React, { useState, useEffect } from "react";
-import Validate from "./Validate";
-import timestamp from "./timestamp.js"
-import paths from "./config/paths"
+import React, { useEffect, useState } from "react";
+import Validate from "./Validate.js";
+import axios from "axios";
+
 
 const Login = (props) => {
-
-  let [timeDate, setTimeDate] = useState(null);
-  let [randNumID, setRandNumID] = useState("");
-  let [signUpTime, setSignUpTime] = useState("");
-  let [email, setEmail] = useState("");
-  let [loaded, setLoaded] = useState(false);
-  let [newUsers, setNewUsers] = useState([]);
-
-  let [confirmAddress, setConfirmAddress] = useState(paths.confirmAddress);
-  let [checkUUID, setCheckUUID] = useState(paths.checkUUID);
-
-
-  function checkConfirmations(uniqueID) {
-
-    fetch(checkUUID + "?uuid=" + uniqueID)
-      .then((response) => response.json())
-      .then(
-        (data) => {
-          if (data === uniqueID) {
-            props.createUser();
-          } else {
-            props.showAlert(data + " is not recognized.", "danger")
-          }
-        },
-        (error) => {
-          console.log("fetch error: " + error);
-
-        }
-      );
-
-  }
-
-
-
-  function getParams() {
-
-    let url = window.location;
-    let urlVals = {};
-    (url + "?")
-      .split("?")[1]
-      .split("&")
-      .forEach(function (pair) {
-        pair = (pair + "=").split("=").map(decodeURIComponent);
-        if (pair[0].length) {
-          urlVals[pair[0]] = pair[1];
-          if (pair[0] === "uuid") {
-            setRandNumID((randNumID) => pair[1]);
-            checkConfirmations(pair[1]);
-
-          }
-          if (pair[0] === "timestamp") {
-            setSignUpTime((signUpTime) => pair[1]);
-          }
-          if (pair[0] === "email") {
-            setEmail((email) => pair[1]);
-          }
-
-          if (pair[0] === "confirm") {
-            if (localStorage.getItem("password")) {
-              props.showAlert("THAT WORKED! Go check your email account to finish the process. MUST USE SAME COMPUTER YOU STARTED ON.", "success");
-            }
-          }
-
-        }
-      });
-  }
-
-
-  function prepInfo() {
-    setTimeDate((timeDate) => timestamp());
-
-
-  }
+  let [wakeUp, setWakeUp] = useState("default");
 
   const onHandleChange = (e) => {
     if (document.querySelector("button.ckValidate.hide")) {
@@ -87,127 +15,83 @@ const Login = (props) => {
       Validate(["email", "password"]);
     } else {
       Validate(["email", "password1", "password2"]);
-      prepInfo();
     }
-  };
 
-  function ckNewPassword() {
+  }
+
+  const ckNewPassword = () => {
     localStorage.setItem("email", document.querySelector("input[name='email']").value.toLowerCase());
     localStorage.setItem("password", document.querySelector("input[name='password2']").value);
     onHandleChange();
 
-    const pass1 = document.querySelector("input[name='password1']").value;
+    let pass1 = "";
+    if (document.querySelector("input[name='password1']")) {
+      pass1 = document.querySelector("input[name='password1']").value;
+    }
+
     let pass2 = "";
     if (document.querySelector("input[name='password2']").value) {
       pass2 = document.querySelector("input[name='password2']").value;
     }
+
     if (pass1 === pass2) {
-      document.querySelector("button[name='newUser']").disabled = false;
+      document.querySelector("button[name='newUser']").classList.remove("hide");
+      document.querySelector("input[name='password2']").classList.remove("error");
     } else {
-      document.querySelector("button[name='newUser']").disabled = true;
+      document.querySelector("button[name='newUser']").classList.add("hide");
+      document.querySelector("input[name='password2']").classList.add("error");
+
     }
   }
 
 
-  useEffect(() => {
-    if (loaded === false) {
-      getParams();
-      setLoaded((loaded) => true);
-    }
-  });
+  return (<div className="container">
 
+    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center d-flex justify-content-center my-5">
+      <div class="col mt-5">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3">
+            <h4 class="my-0 fw-normal">Welcome Home</h4>
+          </div>
 
-  //MUST CHANGE .htaccess and php cors between envirionments
+          <div class="card-body">
+            {props.newUser === false ?
+              <React.Fragment>
 
-  return (
-    <div className="col-md-12">
+                <input type="text" className="form-control" name="email" placeholder="Email" maxLength="75" onChange={onHandleChange} />
+                <input type="password" className="form-control" name="password" placeholder="Password" maxLength="75" onChange={onHandleChange} />
+                <button className="btn btn-block w-100 btn-success ckValidate hide" onClick={() => props.login()}>Login</button>
+                <i><a href="#" onClick={() => props.setNewUser((newUser) => true)}>Create New Account</a></i>
+              </React.Fragment>
+              :
+              <React.Fragment>
+                <h2>Create Account</h2>
 
-      <div className="loginForm">
-        {props.newUser === false ? (
-          <React.Fragment>
-            <h2>Sign in</h2>
-            <form onSubmit={props.login}>
-              <input
-                type="text"
-                className="form-control"
-                name="email"
-                placeholder="Email"
-                maxLength="255"
-                onChange={onHandleChange}
-              />
-              <input
-                type="password"
-                className="form-control"
-                name="password"
-                placeholder="password"
-                maxLength="50"
-                onChange={onHandleChange}
-              />
-              <button
-                type="submit"
-                className="btn w-100 btn-success ckValidate hide"
-              >
-                Login
-              </button>
-            </form>
-            <small>
-              <a href="#" onClick={() => props.setUserType(true)}>
-                Don't have an account? Click here.
-              </a>
-            </small>
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            <h2>Create Account</h2>
-            <form method="POST" action={confirmAddress}>
+                <input type="text" className="form-control" name="email" placeholder="Email" maxLength="75" onChange={onHandleChange} />
+                <select className="form-control" name="level">
+                  <option value="employee">Employee</option>
+                  <option value="manager">Manager</option>
+                </select>
+                <input type="password" className="form-control" name="password1" placeholder="Password" maxLength="75" onChange={ckNewPassword} />
+                <input type="password" className="form-control" name="password2" placeholder="Password" maxLength="75" onChange={ckNewPassword} />
 
-              <input
-                type="text"
-                className="form-control"
-                name="email"
-                placeholder="Email"
-                maxLength="255"
-                onChange={onHandleChange}
-              />
-              <input
-                type="password"
-                className="form-control"
-                name="password1"
-                placeholder="password"
-                maxLength="50"
-                onChange={ckNewPassword}
-              />
-              <input
-                type="password"
-                className="form-control"
-                name="password2"
-                placeholder="password"
-                maxLength="50"
-                onChange={ckNewPassword}
-              />
+                <button className="btn btn-block btn-success ckValidate hide" name="newUser" onClick={() => props.createUser()}>Create User</button>
 
-              <input type="hidden" name="timestamp" value={timeDate} />
+                <i><a href="#" onClick={() => props.setNewUser((newUser) => false)}>Already have an account</a></i>
+              </React.Fragment>}
+          </div>
 
-
-              <button
-                className="btn w-100 btn-success ckValidate hide"
-                name="newUser"
-                type="submit"
-
-              >
-                Create User
-              </button>
-            </form>
-            <i>
-              <a href="#" onClick={() => props.setUserType(false)}>
-                Already have an account
-              </a>
-            </i>
-          </React.Fragment>
-        )}
+        </div>
       </div>
+
+
     </div>
-  );
-};
+
+
+
+
+  </div>)
+
+}
 
 export default Login;
