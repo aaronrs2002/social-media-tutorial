@@ -15,9 +15,9 @@ app.use(bodyParser.json());
 //START CREATE USER
 const create = (data, callback) => {
   db.query(
-    `insert into user(theme,email,password)
-                    values(?,?,?)`,
-    [data.theme, data.email, data.password],
+    `insert into user(email,theme,password)
+                      values(?,?,?)`,
+    [data.email, data.theme, data.password],
     (error, results, fields) => {
       if (error) {
         return callback(error);
@@ -29,14 +29,17 @@ const create = (data, callback) => {
 
 app.post("/newUser", (req, res) => {
   const body = req.body;
+
+  console.log("JSON.stringify(req.body): " + JSON.stringify(req.body));
+
+
   const salt = genSaltSync(10);
   body.password = hashSync(body.password, salt);
   create(body, (err, results) => {
     if (err) {
-      res.send(err);
       return res.status(500).json({
         success: 0,
-        message: "Database connection error: " + err,
+        message: "There was 500 error: " + err,
       });
     }
     return res.status(200).json({
@@ -47,6 +50,7 @@ app.post("/newUser", (req, res) => {
 });
 
 //END CREATE USER
+
 
 /////////////////////////////START LOGIN
 
