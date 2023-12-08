@@ -9,10 +9,12 @@ import SaveTheme from "./components/SaveTheme";
 import MainContent from "./components/MainContent";
 import User from "./components/User";
 import Banner from "./components/Banner";
+import Validate from "./components/Validate.js";
+
 
 function App() {
-  let [userEmail, setEmail] = useState(null);
-  let [newUser, setUserType] = useState(false);
+  let [userEmail, setUserEmail] = useState(null);
+  let [newUserType, setUserType] = useState(false);
   let [isValidUser, setValidUser] = useState(false);
   let [token, setToken] = useState("");
   let [alert, setAlert] = useState("default");
@@ -23,6 +25,7 @@ function App() {
   let [banner, setBanner] = useState(
     "./img/banner.jpg"
   );
+  let [newUser, setNewUser] = useState(false);
 
   const config = {
     headers: {
@@ -46,7 +49,7 @@ function App() {
       setToken((token) => token);
       sessionStorage.setItem("token", token);
       setTokenCk((checkedToken) => true);
-      setEmail((userEmail) => email);
+      setUserEmail((userEmail) => email);
       sessionStorage.setItem("email", email);
       axios.get("/theme/" + email).then(
         (res) => {
@@ -87,7 +90,7 @@ function App() {
     } else {
       setValidUser((isValidUser) => false);
       setToken((token) => token);
-      setEmail((userEmail) => null);
+      setUserEmail((userEmail) => null);
       showAlert("That didn't work: " + msg, "danger");
     }
   };
@@ -113,7 +116,7 @@ function App() {
       .then(
         (res) => {
           showAlert("User created succussfully!", "success");
-          setUserType((newUser) => false);
+          setUserType((newUserType) => false);
           document.querySelector("button.ckValidate").classList.remove("hide");
           localStorage.removeItem('email');
           localStorage.removeItem('password');
@@ -125,38 +128,40 @@ function App() {
   };
   //END CREATE USER
 
-  //START LOGIN
-  const login = (event) => {
-    event.preventDefault();
-    setEmail((userEmail) => null);
-    const email = document.querySelector("input[name='email']").value.toLowerCase();
-    const password = document.querySelector("input[name='password']").value;
+  //CLIENT SIDE START LOGIN 
+  const login = () => {
+    setUserEmail((userEmail) => null);
+    Validate(["email", "password"]);
 
-    if (!email || !password) {
-      showAlert("Not one character?", "danger");
-      return false;
-    }
+    if (document.querySelector(".error")) {
+      showAlert("There is an error in your form.", "danger");
+      return false
+    } else {
+      const email = document.querySelector("input[name='email']").value.toLowerCase();
+      const password = document.querySelector("input[name='password']").value;
 
-    axios
-      .post(
-        "/login",
-        { email: email, password: password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+      axios.post("/login", { email, password }, {
+        headers: {
+          "Content-Type": "application/json"
         }
-      )
-      .then(
+      }).then(
         (res) => {
-          validateUser(res.data.success, res.data.token, email, res.data.data);
+          if (res.data.success === 1) {
+            showAlert(email + " logged in.", "success");
+            validateUser(res.data.success, res.data.token, email, "logged in");
+            localStorage.removeItem("password");
+          } else {
+            showAlert("That didn't work: " + res.data.data, "danger")
+          }
         },
         (error) => {
           showAlert("That didn't work: " + error, "danger");
         }
-      );
-  };
-  //END LOGIN
+      )
+
+    }
+  }
+
 
   //START LOG OUT
   const logout = () => {
@@ -217,26 +222,27 @@ function App() {
 
   return (
     <React.Fragment>
+      {" "}
+      {alert !== "default" ? (
+        <div
+          id="messageAlert"
+          className={"alert alert-" + alertType + " animated fadeInUp"}
+          role="alert"
+        >
+          {alert}
+        </div>
+      ) : null}
       {isValidUser === true ? null : (
         <Login
           login={login}
           createUser={createUser}
-          setUserType={setUserType}
+          setNewUser={setNewUser}
           newUser={newUser}
           showAlert={showAlert}
         />
       )}
       <main>
-        {" "}
-        {alert !== "default" ? (
-          <div
-            id="messageAlert"
-            className={"alert alert-" + alertType + " animated fadeInDown"}
-            role="alert"
-          >
-            {alert}
-          </div>
-        ) : null}
+
         <div>
           {isValidUser === true ? (
             <React.Fragment>
