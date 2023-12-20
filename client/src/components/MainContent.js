@@ -421,6 +421,7 @@ const MainContent = (props) => {
             userEmail={props.userEmail}
             showAlert={props.showAlert}
             config={props.config}
+            logout={props.logout}
           />
 
         </div>
