@@ -140,6 +140,7 @@ function App() {
       const email = document.querySelector("input[name='email']").value.toLowerCase();
       const password = document.querySelector("input[name='password']").value;
 
+
       axios.post("/login", { email, password }, {
         headers: {
           "Content-Type": "application/json"
@@ -252,6 +253,7 @@ function App() {
                 avatar={avatar}
                 showAlert={showAlert}
                 config={config}
+                logout={logout}
               />
             </React.Fragment>
           ) : null}
