@@ -51,7 +51,7 @@ const Login = (props) => {
       <div class="col mt-5">
         <div class="card mb-4 rounded-3 shadow-sm">
           <div class="card-header py-3">
-            <h4 class="my-0 fw-normal">Welcome Home</h4>
+            <h4 class="my-0 fw-normal">Social Media App</h4>
           </div>
 
           <div class="card-body">
@@ -75,7 +75,7 @@ const Login = (props) => {
                 <input type="password" className="form-control" name="password1" placeholder="Password" maxLength="75" onChange={ckNewPassword} />
                 <input type="password" className="form-control" name="password2" placeholder="Password" maxLength="75" onChange={ckNewPassword} />
 
-                <button className="btn btn-block btn-success ckValidate hide" name="newUser" onClick={() => props.createUser()}>Create User</button>
+                <button className="btn w-100 btn-success ckValidate hide" name="newUser" onClick={() => props.createUser()}>Create User</button>
 
                 <i><a href="#" onClick={() => props.setNewUser((newUser) => false)}>Already have an account</a></i>
               </React.Fragment>}
