@@ -44,21 +44,18 @@ const Stage = (props) => {
 
     axios.get("/api/messages/" + props.userEmail, props.config).then(
       (response) => {
+        console.log("response.status: " + response.status + " (typeof response.status): " + (typeof response.status));
+        if (response.status) {
+          if (response.status >= 400 && response.status < 500) {
+            props.showAlert("HTTP MESSAGES RESPONSE STATUS: " + response.status + " Log back in please.", "warning");
+            props.logout();
+          }
+          if (response.status >= 500) {
+            props.showAlert("HTTP MESSAGES RESPONSE STATUS: " + response.status + " Log back in please.", "danger");
+            props.logout();
+          }
+        }
 
-        /* if (response.status) {
-           let alertType = "info";
-           if (response.status == 200) {
-             alertType = "success";
-           }
-           if (response.status >= 400 && response.status < 500) {
-             alertType = "warning";
-           }
-           if (response.status >= 500) {
-             alertType = "danger";
-           }
-           props.showAlert("HTTP MESSAGES RESPONSE STATUS: " + response.status, alertType);
-         }
- */
         if (response.data == "zero messages") {
           setConversation((conversation) => [{
             "message": "Hello " + props.userEmail + " you have no messages.",
@@ -88,6 +85,8 @@ const Stage = (props) => {
         setContactList((contactList) => tempContacts);
       }, (error) => {
         console.log(error);
+        props.showAlert("Error" + error.message + " - To avoid this, use the \"Log Out\" button at the end of each session.", "warning");
+        props.logout();
       }
     )
   }
