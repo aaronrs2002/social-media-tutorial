@@ -4,8 +4,8 @@ const db = require("../../config/db");
 const { checkToken } = require("../../auth/token_validation");
 
 //VIEW FEEDS
-router.get("/:email", (req, res) => {
-  let sql = `SELECT * FROM feeds WHERE email = '${req.params.email}'`;
+router.get("/:email", checkToken, (req, res) => {
+  let sql = `SELECT * FROM feeds WHERE email = '${req.params.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
   let query = db.query(sql, (err, results) => {
     if (err) {
       console.log(err);
@@ -35,8 +35,8 @@ router.post("/add-feed", checkToken, (req, res) => {
 });
 
 //DELETE FEED
-router.delete("/remove-feed/:id", (req, res) => {
-  let sql = `DELETE FROM feeds WHERE id = "${req.params.id}"`;
+router.delete("/remove-feed/:id", checkToken, (req, res) => {
+  let sql = `DELETE FROM feeds WHERE id = "${req.params.id.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}"`;
   let query = db.query(sql, (err, result) => {
     if (err) {
       console.log(err);
