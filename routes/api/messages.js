@@ -29,7 +29,7 @@ router.post("/post-message", checkToken, (req, res) => {
 router.get("/:userEmail", checkToken, (req, res) => {
   userEmail = req.params.userEmail;
 
-  let sql = `SELECT * FROM messages WHERE initiator = '${userEmail}' OR recipient='${userEmail}' ORDER BY timestamp`;
+  let sql = `SELECT * FROM messages WHERE initiator = '${userEmail.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}' OR recipient='${userEmail.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}' ORDER BY timestamp`;
 
   let query = db.query(sql, (err, results) => {
     if (err) {
@@ -49,7 +49,7 @@ router.get("/:userEmail", checkToken, (req, res) => {
 
 //MESSAGE VIEWED BY userEmail SERVER SIDE
 router.put("/viewed", checkToken, (req, res) => {
-  let sql = `UPDATE messages SET recipient = '${req.body.recipient}', initiator = '${req.body.initiator}'  WHERE uuid = '${req.body.uuid}'`;
+  let sql = `UPDATE messages SET recipient = '${req.body.recipient.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}', initiator = '${req.body.initiator.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'  WHERE uuid = '${req.body.uuid.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
   let query = db.query(sql, (err, result) => {
     if (err) {
       console.log(err);
@@ -62,7 +62,7 @@ router.put("/viewed", checkToken, (req, res) => {
 
 //DELETE MESSAGE SERVER SIDE
 router.delete("/remove-message/:uuid", checkToken, (req, res) => {
-  let sql = `DELETE FROM messages WHERE uuid = '${req.params.uuid}'`;
+  let sql = `DELETE FROM messages WHERE uuid = '${req.params.uuid.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
   let query = db.query(sql, (err, result) => {
     if (err) {
       console.log(err);
