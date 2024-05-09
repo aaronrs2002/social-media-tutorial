@@ -29,48 +29,57 @@ router.post("/post-message", checkToken, (req, res) => {
 router.get("/:userEmail", checkToken, (req, res) => {
   userEmail = req.params.userEmail;
 
-  let sql = `SELECT * FROM messages WHERE initiator = '${userEmail.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}' OR recipient='${userEmail.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}' ORDER BY timestamp`;
+  //let sql = `SELECT * FROM messages WHERE initiator = '${userEmail.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}' OR recipient='${userEmail.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}' ORDER BY timestamp`;
 
-  let query = db.query(sql, (err, results) => {
-    if (err) {
-      console.log(err);
-    } else {
-      if (results.length > 0) {
-
-        console.log(results);
-
-        res.send(results);
+  let query = db.query(
+    `SELECT * FROM messages WHERE initiator = ? OR recipient= ? ORDER BY timestamp`,
+    [userEmail, userEmail],
+    (err, results) => {
+      if (err) {
+        console.log(err);
       } else {
-        res.send("zero messages");
+        if (results.length > 0) {
+
+          console.log(results);
+
+          res.send(results);
+        } else {
+          res.send("zero messages");
+        }
       }
-    }
-  });
+    });
 });
 
 //MESSAGE VIEWED BY userEmail SERVER SIDE
 router.put("/viewed", checkToken, (req, res) => {
-  let sql = `UPDATE messages SET recipient = '${req.body.recipient.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}', initiator = '${req.body.initiator.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'  WHERE uuid = '${req.body.uuid.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
-  let query = db.query(sql, (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(result);
-      res.send(result);
-    }
-  });
+  // let sql = `UPDATE messages SET recipient = '${req.body.recipient.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}', initiator = '${req.body.initiator.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'  WHERE uuid = '${req.body.uuid.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
+  let query = db.query(
+    `UPDATE messages SET recipient = ?, initiator = ?  WHERE uuid = ?`,
+    [req.body.recipient, req.body.initiator, req.body.uuid],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result);
+        res.send(result);
+      }
+    });
 });
 
 //DELETE MESSAGE SERVER SIDE
 router.delete("/remove-message/:uuid", checkToken, (req, res) => {
-  let sql = `DELETE FROM messages WHERE uuid = '${req.params.uuid.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
-  let query = db.query(sql, (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(result);
-      res.send(result);
-    }
-  });
+  //let sql = `DELETE FROM messages WHERE uuid = '${req.params.uuid.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
+  let query = db.query(
+    `DELETE FROM messages WHERE uuid = ?`,
+    [req.params.uuid],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result);
+        res.send(result);
+      }
+    });
 });
 
 module.exports = router;
