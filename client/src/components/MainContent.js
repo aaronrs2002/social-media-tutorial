@@ -137,7 +137,7 @@ const MainContent = (props) => {
       userFeed = sessionStorage.getItem("lastFeed");
     }
     setWhosFeed((whosFeed) => userFeed);
-    axios.get("/api/feeds/" + userFeed).then(
+    axios.get("/api/feeds/" + userFeed, props.config).then(
       (res) => {
         /* if (res.status) {
            let alertType = "info";
