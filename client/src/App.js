@@ -51,8 +51,11 @@ function App() {
       setTokenCk((checkedToken) => true);
       setUserEmail((userEmail) => email);
       sessionStorage.setItem("email", email);
-      axios.get("/theme/" + email).then(
+      axios.get("/theme/" + email, config).then(
+
         (res) => {
+
+          console.log("FROM THEME res.data[0].theme: " + res.data[0].theme);
           if (res.data[0].theme) {
             SaveTheme(res.data[0].theme);
           } else {
@@ -64,8 +67,9 @@ function App() {
         }
       );
       //FRON END GET AVATAR
-      axios.get("/avatar/" + email).then(
+      axios.get("/avatar/" + email, config).then(
         (res) => {
+          console.log("FROM THEME res.data[0].avatar: " + res.data[0].avatar);
           if (res.data[0].avatar) {
             setAvatar((avatar) => res.data[0].avatar);
           } else {
@@ -77,7 +81,7 @@ function App() {
         }
       );
       //FRONT END GET BANNER
-      axios.get("/banner/" + email).then(
+      axios.get("/banner/" + email, config).then(
         (res) => {
           if (res.data[0].banner) {
             setBanner((banner) => res.data[0].banner);
@@ -191,32 +195,27 @@ function App() {
 
   //START REFRESH
   useEffect(() => {
-    /*  if (userEmail === null) {
-      validateUser(1, "dev pass", "aaron@test.com", "dev work");
-    }*/
 
     if (sessionStorage.getItem("token") && checkedToken === false) {
       axios.get("/check-token/" + sessionStorage.getItem("email"), config).then(
         (res) => {
           try {
             if (sessionStorage.getItem("token") === res.data[0].token) {
-              validateUser(
-                1,
-                res.data[0].token,
-                sessionStorage.getItem("email"),
-                "token success"
-              );
+              validateUser(1, res.data[0].token, sessionStorage.getItem("email"), "token success");
+
             }
           } catch (error) {
-            console.error(error);
-            return false;
+            console.log("error: " + error);
+            return false
           }
-        },
-        (error) => {
-          showAlert("That token-request didn't work: " + error, "danger");
+        }, (error) => {
+          showAlert("That token request didn't work: " + error, "danger");
+
           logout();
+
         }
-      );
+
+      )
     }
   });
   //END REFRESH
