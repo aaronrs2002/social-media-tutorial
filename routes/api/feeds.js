@@ -5,15 +5,18 @@ const { checkToken } = require("../../auth/token_validation");
 
 //VIEW FEEDS
 router.get("/:email", checkToken, (req, res) => {
-  let sql = `SELECT * FROM feeds WHERE email = '${req.params.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
-  let query = db.query(sql, (err, results) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(results);
-      res.send(results);
-    }
-  });
+  //let sql = `SELECT * FROM feeds WHERE email = '${req.params.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
+  let query = db.query(
+    `SELECT * FROM feeds WHERE email = ?`,
+    [req.params.email],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(results);
+        res.send(results);
+      }
+    });
 });
 
 //ADD FEED
@@ -36,15 +39,18 @@ router.post("/add-feed", checkToken, (req, res) => {
 
 //DELETE FEED
 router.delete("/remove-feed/:id", checkToken, (req, res) => {
-  let sql = `DELETE FROM feeds WHERE id = "${req.params.id.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}"`;
-  let query = db.query(sql, (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(result);
-      res.send(result);
-    }
-  });
+  // let sql = `DELETE FROM feeds WHERE id = "${req.params.id.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}"`;
+  let query = db.query(
+    `DELETE FROM feeds WHERE id = ?`,
+    [req.params.id],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result);
+        res.send(result);
+      }
+    });
 });
 
 module.exports = router;
