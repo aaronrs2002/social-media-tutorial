@@ -47,7 +47,7 @@ function App() {
     if (success === 1) {
       setValidUser((isValidUser) => true);
       setToken((token) => token);
-      sessionStorage.setItem("token", token);
+
       setTokenCk((checkedToken) => true);
       setUserEmail((userEmail) => email);
       sessionStorage.setItem("email", email);
@@ -148,7 +148,7 @@ function App() {
       }).then(
         (res) => {
           if (res.data.success === 1) {
-            showAlert(email + " logged in.", "success");
+            sessionStorage.setItem("token", res.data.token);
             validateUser(res.data.success, res.data.token, email, "logged in");
             localStorage.removeItem("password");
           } else {
