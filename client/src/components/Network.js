@@ -15,7 +15,7 @@ const Network = (props) => {
   };
   /*GRAB NETWORKLIST*/
   const getNetworkList = () => {
-    axios.get("/get-network/" + props.userEmail).then(
+    axios.get("/get-network/" + props.userEmail, config).then(
       (res) => {
         if (res.data[0].network !== null) {
           let listArr = res.data[0].network.split(",").map(function (a) {
