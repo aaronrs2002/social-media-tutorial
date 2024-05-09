@@ -22,12 +22,12 @@ const ChangePassword = (props) => {
       axios
         .put(
           "/change-password",
-          config,
+
           {
             email: sessionStorage.getItem("email"),
             password: document.querySelector("input[name='new-password']")
               .value,
-          }
+          }, config,
         )
         .then(
           (res) => {
@@ -45,25 +45,25 @@ const ChangePassword = (props) => {
   };
 
   return (
-  
-    
-        <div className="form-group py-2">
-    
-          <input
-            type="password"
-            name="new-password"
-            className="form-control"
-            placeholder="New Password"
-          />
-          <button
-            type="submit"
-            className="btn btn-block btn-danger ckValidate "
-            onClick={changePassword}
-          >
-            Change Password
-          </button>
-        </div>
- 
+
+
+    <div className="form-group py-2">
+
+      <input
+        type="password"
+        name="new-password"
+        className="form-control"
+        placeholder="New Password"
+      />
+      <button
+        type="submit"
+        className="btn btn-block btn-danger ckValidate "
+        onClick={changePassword}
+      >
+        Change Password
+      </button>
+    </div>
+
   );
 };
 
