@@ -8,7 +8,7 @@ const FilterFeeds = (props) => {
   /*CLIENT SIDE GRAB REMOVE LIST*/
   const getRemoveList = () => {
 
-    axios.get("/get-list/" + props.userEmail).then(
+    axios.get("/get-list/" + props.userEmail, props.config).then(
       (res) => {
 
         let listArr = [];
@@ -19,6 +19,7 @@ const FilterFeeds = (props) => {
             return a.trim();
           });
         }
+        console.log("listArr: " + listArr);
         props.setRemoveList((removeList) => listArr);
         props.takeOutFeeds(listArr);
 
@@ -77,7 +78,10 @@ const FilterFeeds = (props) => {
 
   useEffect(() => {
     if (props.userEmail !== null && loaded !== true) {
-      getRemoveList();
+      setTimeout(() => {
+        getRemoveList();
+      }, 1000)
+
       setLoaded((loaded) => true);
     }
   });
