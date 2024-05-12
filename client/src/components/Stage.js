@@ -44,7 +44,7 @@ const Stage = (props) => {
 
     axios.get("/api/messages/" + props.userEmail, props.config).then(
       (response) => {
-        console.log("response.status: " + response.status + " (typeof response.status): " + (typeof response.status));
+
         if (response.status) {
           if (response.status >= 400 && response.status < 500) {
             props.showAlert("HTTP MESSAGES RESPONSE STATUS: " + response.status + " Log back in please.", "warning");
@@ -216,7 +216,7 @@ const Stage = (props) => {
     }
   });
 
-  console.log("conversation.length: " + conversation.length);
+
   return (<div className="row">
     <h2>Message Network users</h2>
     <div className="col-6 p-0">
