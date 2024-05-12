@@ -11,6 +11,7 @@ import paths from "./config/paths";
 const MainContent = (props) => {
   let [loaded, setLoaded] = useState(false);
   let [obj, setObj] = useState([]);
+  let [filteredObj, setFilteredObj] = useState([]);
   let [show, setShow] = useState("");
   let [active, setActive] = useState();
   let [filter, setFilter] = useState("");
@@ -228,24 +229,33 @@ const MainContent = (props) => {
 
   function takeOutFeeds(theRemoveList) {
     let tempFeedNum = 0;
-    for (let i = 0; i < theRemoveList.length; i++) {
-      for (let j = 0; j < obj.length; j++) {
-        let content = obj[j].title.toLowerCase() + obj[j].description.toLowerCase();
-        if (content.indexOf(theRemoveList[i].toLowerCase()) !== -1) {
-          document
-            .querySelector("[data-filter='" + j + "']")
-            .classList.add("hide");
+    let tempObj = [];
+    let takeOutNums = [];
+
+    for (let j = 0; j < obj.length; j++) {
+
+      let content = obj[j].title.toLowerCase() + obj[j].description.toLowerCase();
+      for (let i = 0; i < theRemoveList.length; i++) {
+        if (content.toLowerCase().indexOf(theRemoveList[i].toLowerCase()) !== -1) {
           tempFeedNum = tempFeedNum + 1;
-        } else {
-          document
-            .querySelector("[data-filter='" + j + "']")
-            .classList.remove("hide");
+          takeOutNums.push(j);
         }
+
       }
+
     }
+
+    for (let i = 0; i < obj.length; i++) {
+      if (takeOutNums.indexOf(i) === -1) {
+        tempObj.push(obj[i]);
+      }
+
+    }
+
+    setFilteredObj((filteredObj) => tempObj);
     setHiddenFeeds((hiddenFeeds) => tempFeedNum);
 
-
+    return false;
 
   }
 
@@ -256,10 +266,9 @@ const MainContent = (props) => {
       grabFeedList();
     }
 
-    if (removeList === "tempDataEmpty" && obj.length > 0) {
-      takeOutFeeds(removeList);
-    }
-  }, [loaded, props.userEmail, removeList, obj.length, grabFeedList, takeOutFeeds]);
+
+    setLoaded((loaded) => true);
+  }, []);
 
 
   return (
@@ -313,17 +322,15 @@ const MainContent = (props) => {
             onChange={() => searchBuzzWord()}
           />{" "}
           <ul className="list-group mb-5">
-            {obj.length !== 0 ?
+            {filteredObj.length !== 0 ?
 
-              obj.map((post, i) => {
-                let content = post.title + post.description;
-                content = content.toString().toLowerCase();
+              filteredObj.map((post, i) => {
+
                 return (
                   <React.Fragment key={i}>
                     {show === post.title ?
                       <React.Fragment>
                         <li className="list-group-item active"
-                          style={{ display: content.indexOf(search.toLowerCase()) !== -1 ? "inherit" : "none" }}
                           data-filter={i}
                           onClick={() => toggle("")}
                         >{post.title + " "}
@@ -331,7 +338,7 @@ const MainContent = (props) => {
                         </li>
 
 
-                        <div className="card" style={{ display: content.indexOf(search.toLowerCase()) !== -1 ? "inherit" : "none" }} >
+                        <div className="card"  >
                           <div className="card-body">
                             <div>{parse(post.description)}</div>
                             {whosFeed === post.userEmail ? (<i
@@ -348,7 +355,7 @@ const MainContent = (props) => {
                         </div>
                       </React.Fragment>
                       : <li key={i} data-filter={i} className="list-group-item"
-                        style={{ display: content.indexOf(search.toLocaleLowerCase()) !== -1 ? "inherit" : "none" }}
+
                         onClick={() => toggle(post.title)}
                       >
                         {post.title}
