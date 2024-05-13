@@ -109,7 +109,7 @@ app.post("/login", (req, res) => {
       if (jsontoken) {
         //  let sql = `UPDATE user SET token = '${jsontoken}' WHERE email = "${body.email}"`;
         let query = db.query(
-          `UPDATE user SET token = ? WHERE email = ?"`,
+          `UPDATE user SET token = ? WHERE email = ?`,
           [jsontoken, body.email],
           (err, result) => {
             if (err) {
