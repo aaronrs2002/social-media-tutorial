@@ -50,8 +50,17 @@ function App() {
 
       setTokenCk((checkedToken) => true);
       setUserEmail((userEmail) => email);
- 
-      axios.get("/theme/" + email, config).then(
+
+      axios.get("/theme/" + email,
+
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+
+      ).then(
 
         (res) => {
 
@@ -67,7 +76,16 @@ function App() {
         }
       );
       //FRON END GET AVATAR
-      axios.get("/avatar/" + email, config).then(
+      axios.get("/avatar/" + email,
+
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+
+      ).then(
         (res) => {
           console.log("FROM THEME res.data[0].avatar: " + res.data[0].avatar);
           if (res.data[0].avatar) {
@@ -81,7 +99,16 @@ function App() {
         }
       );
       //FRONT END GET BANNER
-      axios.get("/banner/" + email, config).then(
+      axios.get("/banner/" + email,
+
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+
+      ).then(
         (res) => {
           if (res.data[0].banner) {
             setBanner((banner) => res.data[0].banner);
