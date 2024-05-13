@@ -233,7 +233,12 @@ const MainContent = (props) => {
     let takeOutNums = [];
 
     for (let j = 0; j < obj.length; j++) {
-
+      if ((typeof obj[j].title) !== "string") {
+        obj[j].title = "Missing Title";
+      }
+      if ((typeof obj[j].description) !== "string") {
+        obj[j].description = "Missing Description";
+      }
       let content = obj[j].title.toLowerCase() + obj[j].description.toLowerCase();
       for (let i = 0; i < theRemoveList.length; i++) {
         if (content.toLowerCase().indexOf(theRemoveList[i].toLowerCase()) !== -1) {
@@ -326,43 +331,51 @@ const MainContent = (props) => {
 
               filteredObj.map((post, i) => {
 
-                return (
-                  <React.Fragment key={i}>
-                    {show === post.title ?
-                      <React.Fragment>
-                        <li className="list-group-item active"
-                          data-filter={i}
-                          onClick={() => toggle("")}
-                        >{post.title + " "}
-                          {favorites.indexOf(post.guid) !== -1 ? <small><i className="fas fa-heart"></i> - {whosFeed}</small> : null}
-                        </li>
+                let theContent = post.title.toLowerCase() + post.description.toLowerCase();
+
+                if (theContent.indexOf(search) !== -1 || search.length === 0) {
+                  return (
+                    <React.Fragment key={i}>
+                      {show === post.title ?
+                        <React.Fragment>
+                          <li className="list-group-item active"
+                            data-filter={i}
+                            onClick={() => toggle("")}
+                          >{post.title + " "}
+                            {favorites.indexOf(post.guid) !== -1 ? <small><i className="fas fa-heart"></i> - {whosFeed}</small> : null}
+                          </li>
 
 
-                        <div className="card"  >
-                          <div className="card-body">
-                            <div>{parse(post.description)}</div>
-                            {whosFeed === post.userEmail ? (<i
-                              onClick={() => favorite(post.guid)}
-                              className="far fa-heart pointer"
-                            ></i>) : null}
+                          <div className="card"  >
+                            <div className="card-body">
+                              <div>{parse(post.description)}</div>
+                              {whosFeed === post.userEmail ? (<i
+                                onClick={() => favorite(post.guid)}
+                                className="far fa-heart pointer"
+                              ></i>) : null}
+                            </div>
+
+                            <div className="card-footer text-muted">
+                              {post.pubDate.substring(0, post.pubDate.lastIndexOf(":")) + "  "}
+                              <a href={post.link} target="_blank">View Original Post</a>
+                            </div>
+
                           </div>
+                        </React.Fragment>
+                        : <li key={i} data-filter={i} className="list-group-item"
 
-                          <div className="card-footer text-muted">
-                            {post.pubDate.substring(0, post.pubDate.lastIndexOf(":")) + "  "}
-                            <a href={post.link} target="_blank">View Original Post</a>
-                          </div>
+                          onClick={() => toggle(post.title)}
+                        >
+                          {post.title}
+                          {favorites.indexOf(post.guid) !== -1 ? (<small><i className="fas fa-heart"></i>--{whosFeed}</small>) : null}
 
-                        </div>
-                      </React.Fragment>
-                      : <li key={i} data-filter={i} className="list-group-item"
+                        </li>}
+                    </React.Fragment>)
+                } else {
+                  console.log("search: " + search + " - theContent.indexOf(search): " + theContent.indexOf(search))
+                }
 
-                        onClick={() => toggle(post.title)}
-                      >
-                        {post.title}
-                        {favorites.indexOf(post.guid) !== -1 ? (<small><i className="fas fa-heart"></i>--{whosFeed}</small>) : null}
 
-                      </li>}
-                  </React.Fragment>)
               })
               : <div><h4><i>Loading...</i></h4>
                 <div className="loader p-5"></div></div>}
