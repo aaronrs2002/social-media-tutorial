@@ -50,12 +50,12 @@ function App() {
 
       setTokenCk((checkedToken) => true);
       setUserEmail((userEmail) => email);
-      sessionStorage.setItem("email", email);
+ 
       axios.get("/theme/" + email, config).then(
 
         (res) => {
 
-          console.log("FROM THEME res.data[0].theme: " + res.data[0].theme);
+          console.log("FROM THEME JSON.stringify(res): " + JSON.stringify(res));
           if (res.data[0].theme) {
             SaveTheme(res.data[0].theme);
           } else {
