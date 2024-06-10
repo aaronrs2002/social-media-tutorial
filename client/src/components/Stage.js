@@ -290,8 +290,18 @@ const Stage = (props) => {
             data-post={convo.uuid}
           >
             <div className="d-flex flex-nowrap justify-content-between">
-              <div className="order-md-1 pr-2">
-                <img className="avatarIcon" src={convo.avatar} />
+              <div className="order-md-1 pr-2"
+                style={{
+                  backgroundImage: "url(" + convo.avatar + ")",
+                  backgroundPosition: "center",
+                  backgroundSize: "cover",
+                  backgroundRepeat: "no-repeat",
+                  width: "50px",
+                  height: "50px",
+                  borderRadius: "50%",
+                }}
+              >
+
               </div>
               <div className="order-md-2">
                 <ul className="list-unstyled">
