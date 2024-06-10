@@ -16,11 +16,20 @@ const Stage = (props) => {
 
   //CLIENT SIDE SELECT POST
   function selectPost(whichPost, initiator, recipient) {
+    let lwrCaseEmail = document.querySelector("input[name='email']").value;
+    try {
+      lwrCaseEmail = lwrCaseEmail.toLowerCase();
+    } catch (error) {
+      console.log("The email cannot be set to lower case: " + error);
+      return false;
+    }
+
+
     if (props.userEmail !== recipient) {
-      document.querySelector("input[name='email']").value = recipient;
+      lwrCaseEmail = recipient;
     }
     if (props.userEmail !== initiator) {
-      document.querySelector("input[name='email']").value = initiator;
+      lwrCaseEmail = initiator;
     }
     whichPost = whichPost.toString();
     const post = document.querySelector(".list-group-item[data-post='" + whichPost + "']");
@@ -119,11 +128,19 @@ const Stage = (props) => {
 
       let encryptMessage = CryptoJS.AES.encrypt(JSON.stringify(message), paths[0].phrase + theTime).toString();
 
+      let lwrCaseEmail = document.querySelector("input[name='email']").value;
+      try {
+        lwrCaseEmail = lwrCaseEmail.toLowerCase();
+      } catch (error) {
+        console.log("The email cannot be set to lower case: " + error);
+        return false;
+      }
+
       postData({
         avatar: props.avatar,
         initiator: props.userEmail,
         message: encryptMessage,
-        recipient: document.querySelector("input[name='email']").value,
+        recipient: lwrCaseEmail,
         timestamp: theTime,
         uuid: uuid()
       });
@@ -193,7 +210,16 @@ const Stage = (props) => {
       }
       setConversation((conversation) => tempList);
     } else {
-      document.querySelector("input[name='email']").value = viewContact.replace("-viewed", "");
+
+      let lwrCaseEmail = document.querySelector("input[name='email']").value;
+      try {
+        lwrCaseEmail = lwrCaseEmail.toLowerCase();
+      } catch (error) {
+        console.log("The email cannot be set to lower case: " + error);
+        return false;
+      }
+
+      lwrCaseEmail = viewContact.replace("-viewed", "");
       for (let i = 0; i < originalConvos.length; i++) {
         const initiator = originalConvos[i].initiator.replace("-viewed", "");
         const recipient = originalConvos[i].recipient.replace("-viewed", "");
