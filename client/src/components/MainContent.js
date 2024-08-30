@@ -349,10 +349,10 @@ const MainContent = (props) => {
                           <div className="card"  >
                             <div className="card-body">
                               <div>{parse(post.description)}</div>
-                              {whosFeed === post.userEmail ? (<i
+                              {(<i
                                 onClick={() => favorite(post.guid)}
                                 className="far fa-heart pointer"
-                              ></i>) : null}
+                              ></i>)}
                             </div>
 
                             <div className="card-footer text-muted">
