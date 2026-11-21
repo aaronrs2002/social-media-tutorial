@@ -1,6 +1,6 @@
 <?php
 /** RSS 2.0 relay. Requires PHP 7.4+, cURL, DOM, libxml. IPv4-only by design. */
-header('Access-Control-Allow-Origin: https://aaronrs2002.github.io');
+header('Access-Control-Allow-Origin: YOUR DOMAIN HERE');
 header('Access-Control-Allow-Methods: GET');
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
